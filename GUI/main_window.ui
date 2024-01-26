@@ -58,7 +58,7 @@
        </attribute>
        <column>
         <property name="text">
-         <string>Name folder</string>
+         <string>Folder name</string>
         </property>
        </column>
        <column>
@@ -90,14 +90,17 @@
         <string>Load</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox">
+      <widget class="QCheckBox" name="assetsCheckbox">
        <property name="geometry">
         <rect>
-         <x>20</x>
-         <y>370</y>
-         <width>121</width>
+         <x>530</x>
+         <y>380</y>
+         <width>171</width>
          <height>31</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 12pt</string>
        </property>
        <property name="text">
         <string>Assets (songs, sfx)</string>
@@ -106,7 +109,7 @@
       <widget class="QPushButton" name="selectFolder">
        <property name="geometry">
         <rect>
-         <x>510</x>
+         <x>420</x>
          <y>340</y>
          <width>81</width>
          <height>31</height>
@@ -116,10 +119,10 @@
         <string>Select folder</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="backupData">
        <property name="geometry">
         <rect>
-         <x>600</x>
+         <x>510</x>
          <y>340</y>
          <width>81</width>
          <height>31</height>
@@ -134,7 +137,7 @@
         <rect>
          <x>20</x>
          <y>340</y>
-         <width>481</width>
+         <width>391</width>
          <height>31</height>
         </rect>
        </property>
@@ -155,11 +158,24 @@
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">font-size: 16pt;
+        <string notr="true">font-size: 14pt;
 </string>
        </property>
        <property name="text">
         <string>Backups</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="backupData_2">
+       <property name="geometry">
+        <rect>
+         <x>600</x>
+         <y>340</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Backup in Drive</string>
        </property>
       </widget>
      </widget>
@@ -175,12 +191,13 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuAyuda_pibe">
+   <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>Ayuda pibe</string>
+     <string>Help</string>
     </property>
+    <addaction name="separator"/>
    </widget>
-   <addaction name="menuAyuda_pibe"/>
+   <addaction name="menuHelp"/>
   </widget>
  </widget>
  <resources/>
