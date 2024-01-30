@@ -1,10 +1,12 @@
 import os
 import shutil
+from datetime import datetime
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QThread, pyqtSignal
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import QThread, pyqtSignal, Qt, QUrl
+from PyQt5.QtGui import QPixmap, QDesktopServices
+from backup_table import *
 
 class ThreadBackup(QThread):
     progress_updated = pyqtSignal(int, int)
@@ -47,7 +49,6 @@ class ThreadBackup(QThread):
 class mainGUI(QMainWindow):
     def __init__(self):
         super().__init__()
-
         self.selectFolder = self.findChild(QPushButton, 'selectFolder')
         self.backupData = self.findChild(QPushButton, 'backupData')
 
@@ -63,11 +64,25 @@ class mainGUI(QMainWindow):
         self.copy_thread = None
         uic.loadUi(gui_path, self)
 
+
+        #Table column configuration (i know, looks weird)
+        self.tableBackups.setColumnWidth(0, 300)
+        self.tableBackups.setColumnWidth(1, 250)
+        self.tableBackups.setColumnWidth(2, 50)
+        self.tableBackups.setColumnWidth(3, 50)
+        self.tableBackups.horizontalHeader().setSectionResizeMode(0, QHeaderView.Fixed)
+        self.tableBackups.horizontalHeader().setSectionResizeMode(1, QHeaderView.Fixed)
+        self.tableBackups.horizontalHeader().setSectionResizeMode(2, QHeaderView.Fixed)
+        self.tableBackups.horizontalHeader().setSectionResizeMode(3, QHeaderView.Fixed)
+
+
         # Code for progress bar
         self.progress_bar = QProgressBar(self)
-        self.progress_bar.setGeometry(20, 400, 425, 25)
+        self.progress_bar.setGeometry(20, 400, 566, 25)
         self.progress_bar.setValue(0)
 
+
+        # Some status texts
         self.status_label = QLabel(self)
         self.status_label.setGeometry(20, 430, 200, 20)
         self.status_label.setText("")
@@ -75,22 +90,23 @@ class mainGUI(QMainWindow):
         self.status_files = QLabel(self)
         self.status_files.setGeometry(130, 430, 200, 20)
         self.status_files.setText("")
+        # Ends here
+
 
         self.img_bakop = QLabel(self)
-
         # Verifica si el widget se encontró correctamente
         if self.img_bakop:
             # Establece la imagen en el QLabel
             pixmap = QPixmap(img_path)  # Reemplaza con la ruta de tu imagen
             self.img_bakop.setPixmap(pixmap)
-            self.img_bakop.setGeometry(620, 30, 100, 30)
+            self.img_bakop.setGeometry(650, 30, 100, 30)
             self.img_bakop.setScaledContents(True)  # Ajusta la imagen al tamaño del QLabel
         else:
             print("Error: No se encontró el QLabel 'imageLabel'")
 
         self.init_ui()
 
-        self.setFixedSize(722, 456)
+        self.setFixedSize(750, 456)
         self.show()
 
     def init_ui(self):
@@ -113,7 +129,7 @@ class mainGUI(QMainWindow):
             backupLocation.setText(folder_path)
         else:
             # Carpeta no seleccionada (puede deberse a que el usuario canceló el diálogo)
-            QMessageBox.warning(self, "Please, select a folder")
+            QMessageBox.warning(self, "Warning", "Please, select a folder", QMessageBox.Ok)
 
     def backup_button_clicked(self, assets_checked):
         backupLocation = self.findChild(QLabel, 'backupLocation')
@@ -143,9 +159,40 @@ class mainGUI(QMainWindow):
             self.show_confirmation_dialog()
             self.status_label.setText("")
             self.status_files.setText("")
-        else:
-            QMessageBox.warning(self, "Backup error!")
+            # Guardar el nombre de la carpeta y la fecha y hora de creación
+            backup_folder_name = os.path.basename(self.copy_thread.destination_folder)
+            backup_creation_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            # Obtener la cantidad actual de filas
+            current_row_count = self.tableBackups.rowCount()
+            # Aumentar la cantidad de filas en 1
+            self.tableBackups.setRowCount(current_row_count + 1)
+            # Agregar los ítems a las celdas correspondientes
+            folder_item = QTableWidgetItem(backup_folder_name)
+            folder_item.setFlags(folder_item.flags() ^ Qt.ItemIsEditable)  # Deshabilitar la edición
+            self.tableBackups.setItem(current_row_count, 0, folder_item)
+            self.tableBackups.itemClicked.connect(lambda item: handle_item_click(item, backup_folder_name, self.copy_thread))
+            
+            time_item = QTableWidgetItem(backup_creation_time)
+            time_item.setFlags(time_item.flags() ^ Qt.ItemIsEditable)  # Deshabilitar la edición
+            self.tableBackups.setItem(current_row_count, 1, time_item)
 
+            # Verificar si hay archivos .ogg y .mp3 en la carpeta
+            has_ogg_mp3_files = any(
+                file.lower().endswith(('.ogg', '.mp3'))
+                for file in os.listdir(self.copy_thread.destination_folder)
+            )
+
+            # Agregar "Yes" o "No" en la tercera columna
+            format_item = QTableWidgetItem("Yes" if has_ogg_mp3_files else "No")
+            format_item.setFlags(format_item.flags() ^ Qt.ItemIsEditable)  # Deshabilitar la edición
+            self.tableBackups.setItem(current_row_count, 2, format_item)
+
+            data_item = QTableWidgetItem("Yes")
+            data_item.setFlags(data_item.flags() ^ Qt.ItemIsEditable) 
+            self.tableBackups.setItem(current_row_count, 3, data_item)
+
+        else:
+            QMessageBox.warning(self, "Warning", "Backup error!", QMessageBox.Ok)
 
     # Método para actualizar la barra de progreso
     def update_progress(self, total_files, copied_files):
@@ -158,7 +205,6 @@ class mainGUI(QMainWindow):
     def show_confirmation_dialog(self):
         self.confirmation_dialog.setIcon(QMessageBox.Information)
         self.confirmation_dialog.show()
-
 
     # Método para restablecer la barra de progreso
     def reset_progress(self):

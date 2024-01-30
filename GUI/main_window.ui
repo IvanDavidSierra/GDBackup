@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>722</width>
+    <width>774</width>
     <height>456</height>
    </rect>
   </property>
@@ -41,20 +41,35 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <widget class="QTableWidget" name="tableWidget">
+      <widget class="QTableWidget" name="tableBackups">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>40</y>
-         <width>611</width>
+         <width>731</width>
          <height>271</height>
         </rect>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAsNeeded</enum>
+       </property>
+       <property name="showGrid">
+        <bool>false</bool>
        </property>
        <property name="rowCount">
         <number>0</number>
        </property>
+       <attribute name="horizontalHeaderVisible">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="horizontalHeaderCascadingSectionResizes">
+        <bool>false</bool>
+       </attribute>
        <attribute name="horizontalHeaderDefaultSectionSize">
         <number>152</number>
+       </attribute>
+       <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+        <bool>false</bool>
        </attribute>
        <column>
         <property name="text">
@@ -80,10 +95,10 @@
       <widget class="QPushButton" name="pushButton">
        <property name="geometry">
         <rect>
-         <x>630</x>
+         <x>680</x>
          <y>70</y>
          <width>51</width>
-         <height>23</height>
+         <height>21</height>
         </rect>
        </property>
        <property name="text">
@@ -93,9 +108,9 @@
       <widget class="QCheckBox" name="assetsCheckbox">
        <property name="geometry">
         <rect>
-         <x>530</x>
+         <x>590</x>
          <y>380</y>
-         <width>171</width>
+         <width>151</width>
          <height>31</height>
         </rect>
        </property>
@@ -109,7 +124,7 @@
       <widget class="QPushButton" name="selectFolder">
        <property name="geometry">
         <rect>
-         <x>420</x>
+         <x>560</x>
          <y>340</y>
          <width>81</width>
          <height>31</height>
@@ -122,7 +137,7 @@
       <widget class="QPushButton" name="backupData">
        <property name="geometry">
         <rect>
-         <x>510</x>
+         <x>660</x>
          <y>340</y>
          <width>81</width>
          <height>31</height>
@@ -137,7 +152,7 @@
         <rect>
          <x>20</x>
          <y>340</y>
-         <width>391</width>
+         <width>531</width>
          <height>31</height>
         </rect>
        </property>
@@ -165,19 +180,13 @@
         <string>Backups</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="backupData_2">
-       <property name="geometry">
-        <rect>
-         <x>600</x>
-         <y>340</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Backup in Drive</string>
-       </property>
-      </widget>
+      <zorder>tableBackups</zorder>
+      <zorder>pushButton</zorder>
+      <zorder>assetsCheckbox</zorder>
+      <zorder>backupData</zorder>
+      <zorder>backupLocation</zorder>
+      <zorder>label</zorder>
+      <zorder>selectFolder</zorder>
      </widget>
     </item>
    </layout>
@@ -187,7 +196,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>722</width>
+     <width>774</width>
      <height>21</height>
     </rect>
    </property>
